@@ -9,9 +9,11 @@
 
 ## 快速開始
 
+> 網址以 commit SHA 鎖定 v1.3.0 的內容，搭配 SRI 驗證，內容永遠不會改變。
+
 ```html
 <!-- 樣式 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@72b2b13ceb6ed191438bbcbe3642b53465b653b3/dist/dialog-lightbox.min.css"
       integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
 
 <!-- 燈箱：同一個 data-lbx-group 會串成相簿 -->
@@ -19,7 +21,7 @@
   <img src="thumb.jpg" alt="圖片替代文字">
 </a>
 
-<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@72b2b13ceb6ed191438bbcbe3642b53465b653b3/dist/dialog-lightbox.min.js"
         integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
 <script>
   const lightbox = new DialogLightbox({ thumbnails: true });
@@ -31,9 +33,9 @@
 需在 `dialog-lightbox` 之後載入：
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-alert.min.css"
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@72b2b13ceb6ed191438bbcbe3642b53465b653b3/dist/dialog-alert.min.css"
       integrity="sha384-ShBx3oOpbRj1En8kn6ILuonK7LxBP1/y+ncydGX2nqtmQMFJd36mKn6DgdHmsAsP" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-alert.min.js"
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@72b2b13ceb6ed191438bbcbe3642b53465b653b3/dist/dialog-alert.min.js"
         integrity="sha384-8p00d4w2eKoxbA7NPj3Cx5OP/mbx4o4RtEkzdU2QVTKMQiD4/GYkA8fiaNsaa1aN" crossorigin="anonymous"></script>
 <script>
   DialogAlert.fire({
