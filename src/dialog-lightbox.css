@@ -1,0 +1,246 @@
+/*!
+ * DialogLightbox v1.3.0 — styles
+ */
+:root{
+  --lbx-bg: rgba(12, 14, 18, .94);
+  --lbx-fg: #fff;
+  --lbx-btn-bg: rgba(255,255,255,.12);
+  --lbx-btn-bg-hover: rgba(255,255,255,.26);
+  --lbx-btn-border: rgba(255,255,255,.35);
+  --lbx-focus: #ffbf47;
+  --lbx-focus-light: #0b5ed7;
+  --lbx-duration: .25s;
+}
+/* 開啟時鎖定背景捲動 */
+/* 開啟時鎖定背景捲動；以 padding 補回捲軸寬度（由 JS 量測），避免頁面左右跳動 */
+:root:has(dialog.lbx[open]),
+:root.lbx-closing{ overflow: hidden; padding-right: var(--lbx-scrollbar, 0px); } /* 淡出結束前維持鎖定 */
+
+.lbx{
+  inset: 0;
+  width: 100%; height: 100%;
+  max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  overflow: hidden; /* 抽屜滑出時不產生捲軸 */
+  background: var(--lbx-bg);
+  color: var(--lbx-fg);
+  opacity: 0;
+  transition: opacity var(--lbx-duration) ease,
+              overlay var(--lbx-duration) allow-discrete,
+              display var(--lbx-duration) allow-discrete;
+}
+.lbx[open]{ opacity: 1; }
+@starting-style{ .lbx[open]{ opacity: 0; } }
+.lbx::backdrop{ background: transparent; }
+
+.lbx__inner{
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0,1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+}
+.lbx__bar{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .75rem 1rem;
+}
+.lbx__counter{ margin: 0; font-variant-numeric: tabular-nums; font-size: .9375rem; opacity: .9; }
+.lbx__title{ margin: 0; font-size: 1.125rem; font-weight: 700; line-height: 1.4; }
+.lbx__tools{ display: flex; gap: .5rem; margin-left: auto; }
+
+.lbx__stage{
+  position: relative;
+  display: grid; place-items: center;
+  min-height: 0;
+  padding: 0 .75rem;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.lbx__media{
+  display: grid; place-items: center;
+  width: 100%; height: 100%; min-height: 0;
+}
+.lbx__media img{
+  display: block;
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain;
+  border-radius: .25rem;
+  touch-action: none;
+  cursor: zoom-in;
+  user-select: none; -webkit-user-drag: none;
+  transform-origin: center;
+  animation: lbx-in var(--lbx-duration) ease both;
+}
+.lbx__media img.is-zoomed{ cursor: grab; border-radius: 0; }
+.lbx__media img.is-panning{ cursor: grabbing; }
+/* 縮放使用獨立的 translate / scale 屬性，不與進場動畫的 transform 互相覆蓋 */
+.lbx__media img.is-animating{ transition: translate .2s ease, scale .2s ease; }
+.lbx__media iframe,
+.lbx__media video{
+  display: block;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  border: 0; border-radius: .25rem;
+  background: #000;
+}
+.lbx__media iframe{ aspect-ratio: 16 / 9; height: auto; }
+.lbx__inline{
+  width: min(720px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  background: #fff; color: #212529;
+  border-radius: .5rem;
+  animation: lbx-in var(--lbx-duration) ease both;
+}
+.lbx__error{ margin: 0; padding: 1rem 1.5rem; border: 1px solid var(--lbx-btn-border); border-radius: .5rem; }
+
+@keyframes lbx-in{ from{ opacity: 0; transform: scale(.97); } to{ opacity: 1; transform: none; } }
+
+/* 載入指示 */
+.lbx__spinner{
+  position: absolute; inset: 50% auto auto 50%;
+  width: 2.5rem; height: 2.5rem; margin: -1.25rem 0 0 -1.25rem;
+  border: 3px solid rgba(255,255,255,.25); border-top-color: #fff;
+  border-radius: 50%;
+  animation: lbx-spin .8s linear infinite;
+}
+@keyframes lbx-spin{ to{ transform: rotate(360deg); } }
+
+.lbx__foot{
+  display: flex; align-items: center; justify-content: center;
+  gap: .75rem; padding: .75rem 1rem;
+}
+.lbx__caption{
+  flex: 1 1 auto; max-width: 70ch; margin: 0;
+  text-align: center; font-size: .9375rem; line-height: 1.6;
+}
+.lbx__caption:empty{ visibility: hidden; }
+
+/* ---------- 縮圖列 ---------- */
+.lbx__thumbs{ min-width: 0; padding: 0 1rem 1rem; }
+.lbx__thumbs ul{
+  position: relative;
+  display: flex; gap: .5rem; justify-content: safe center;
+  margin: 0; padding: .25rem; list-style: none;
+  overflow-x: auto; scrollbar-width: thin;
+}
+.lbx__thumb{
+  display: block; flex: 0 0 auto;
+  width: 4rem; height: 3rem; padding: 0;
+  overflow: hidden;
+  color: var(--lbx-fg);
+  background: var(--lbx-btn-bg);
+  border: 2px solid transparent; border-radius: .375rem;
+  opacity: .55; cursor: pointer;
+  transition: opacity .15s ease, border-color .15s ease, transform .1s ease;
+}
+.lbx__thumb img{ width: 100%; height: 100%; object-fit: cover; display: block; }
+.lbx__thumb:hover{ opacity: .9; }
+.lbx__thumb:active{ transform: scale(.94); }
+.lbx__thumb:focus-visible{ outline: 3px solid var(--lbx-focus); outline-offset: 2px; opacity: 1; }
+.lbx__thumb[aria-current="true"]{ opacity: 1; border-color: #fff; }
+@media (max-height: 520px){ .lbx__thumbs{ display: none; } }
+
+/* ---------- 按鈕：最小 44×44 觸控目標 ---------- */
+.lbx__btn{
+  flex: 0 0 auto;
+  display: inline-grid; place-items: center;
+  width: 2.75rem; height: 2.75rem;
+  padding: 0;
+  color: var(--lbx-fg);
+  background: var(--lbx-btn-bg);
+  border: 1px solid var(--lbx-btn-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color .15s ease, transform .1s ease;
+}
+.lbx__btn svg{ width: 1.25rem; height: 1.25rem; }
+.lbx__btn:hover{ background: var(--lbx-btn-bg-hover); }
+.lbx__btn:active{ transform: scale(.92); }
+.lbx__btn:focus-visible{ outline: 3px solid var(--lbx-focus); outline-offset: 2px; }
+.lbx__btn:disabled{ opacity: .35; cursor: not-allowed; transform: none; }
+.lbx__zoom .i-out,
+.lbx__zoom[aria-pressed="true"] .i-in{ display: none; }
+.lbx__zoom[aria-pressed="true"] .i-out{ display: block; }
+
+/* hidden 一律優先 */
+.lbx [hidden]{ display: none !important; }
+
+/* 平板以上：上一張／下一張移到兩側 */
+@media (min-width: 768px){
+  .lbx:not(.lbx--panel) .lbx__stage{ padding: 0 5rem; }
+  .lbx__nav{ position: absolute; top: 50%; translate: 0 -50%; width: 3.25rem; height: 3.25rem; z-index: 1; }
+  .lbx__nav--prev{ left: 1rem; }
+  .lbx__nav--next{ right: 1rem; }
+}
+
+/* =========================================================
+ * 面板型變體（modal / drawer）共用
+ * ========================================================= */
+.lbx--panel{ background: rgba(15, 18, 25, .55); }
+.lbx--panel .lbx__inner{
+  grid-template-rows: auto minmax(0,1fr);
+  background: #fff; color: #212529;
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.3);
+}
+.lbx--panel .lbx__bar{ padding: 1rem 1rem 1rem 1.5rem; border-bottom: 1px solid #dee2e6; }
+.lbx--panel .lbx__stage{ display: block; place-items: normal; overflow: auto; padding: 1.25rem 1.5rem 1.5rem; touch-action: auto; }
+.lbx--panel .lbx__media{ display: block; place-items: normal; width: 100%; height: auto; }
+.lbx--panel .lbx__inline{ width: auto; max-height: none; overflow: visible; padding: 0; background: none; border-radius: 0; animation: none; }
+.lbx--panel .lbx__btn{ width: 2.5rem; height: 2.5rem; color: #212529; background: #f1f3f5; border-color: transparent; }
+.lbx--panel .lbx__btn:hover{ background: #dfe3e8; }
+.lbx--panel .lbx__btn:focus-visible{ outline-color: var(--lbx-focus-light); }
+.lbx--panel .lbx__error{ border-color: #dee2e6; }
+
+/* ---------- 變體：Modal ---------- */
+/* 版面屬性不可只寫在 [open]，否則關閉淡出時會跳位 */
+.lbx--modal{ place-items: center; padding: 1rem; }
+.lbx--modal[open]{ display: grid; }
+.lbx--modal .lbx__inner{
+  width: min(var(--lbx-modal-width, 560px), 100%);
+  height: auto; max-height: calc(100dvh - 2rem);
+  border-radius: .75rem;
+  animation: lbx-in var(--lbx-duration) ease both;
+}
+.lbx--modal[data-size="lg"] .lbx__inner{ --lbx-modal-width: 800px; }
+.lbx--modal[data-size="sm"] .lbx__inner{ --lbx-modal-width: 400px; }
+@media (max-width: 575.98px){
+  .lbx--modal{ place-items: end stretch; padding: 0; }
+  .lbx--modal .lbx__inner{ width: 100%; max-height: 92dvh; border-radius: .75rem .75rem 0 0; }
+}
+
+/* ---------- 變體：Drawer（Offcanvas） ---------- */
+.lbx--drawer{ justify-content: flex-end; }
+.lbx--drawer[data-placement="start"]{ justify-content: flex-start; }
+.lbx--drawer[open]{ display: flex; }
+.lbx--drawer .lbx__inner{
+  width: min(var(--lbx-drawer-width, 380px), 88vw);
+  height: 100%;
+  transform: translateX(100%);
+  transition: transform var(--lbx-duration) ease;
+}
+.lbx--drawer[data-placement="start"] .lbx__inner{ transform: translateX(-100%); }
+.lbx--drawer[open] .lbx__inner,
+.lbx--drawer[data-placement="start"][open] .lbx__inner{ transform: none; }
+@starting-style{
+  .lbx--drawer[open] .lbx__inner{ transform: translateX(100%); }
+  .lbx--drawer[data-placement="start"][open] .lbx__inner{ transform: translateX(-100%); }
+}
+
+/* ---------- 無障礙偏好 ---------- */
+@media (forced-colors: active){
+  .lbx__btn, .lbx__thumb{ border: 1px solid ButtonText; }
+  .lbx__btn:focus-visible, .lbx__thumb:focus-visible{ outline-color: Highlight; }
+  .lbx__thumb[aria-current="true"]{ border: 3px solid Highlight; }
+}
+@media (prefers-reduced-motion: reduce){
+  .lbx, .lbx__btn, .lbx__thumb, .lbx--drawer .lbx__inner{ transition: none; }
+  .lbx__media img, .lbx__inline, .lbx--modal .lbx__inner{ animation: none; }
+  .lbx__media img.is-animating{ transition: none; }
+  .lbx__spinner{ animation-duration: 3s; }
+}
+
+/* 若網站未載入 Bootstrap，保留此 visually-hidden */
+.lbx .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>範例五：側邊抽屜 Offcanvas</title>
+<!-- Bootstrap 5.3.8 與 DialogLightbox v1.3.0：皆鎖定版本＋SRI 完整性驗證 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+      integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
+<style>
+  .drawer-menu a{ display: block; padding: .75rem 1rem; margin: 0 -1rem; border-radius: .5rem; color: #212529; text-decoration: none; font-weight: 500; transition: background-color .15s ease; }
+  .drawer-menu a:hover{ background: #f1f3f5; }
+  .drawer-menu a:active{ background: #e2e6ea; }
+  .drawer-menu a:focus-visible{ outline: 3px solid #0b5ed7; outline-offset: -3px; }
+  .drawer-menu a[aria-current="page"]{ color: #0b5ed7; background: #e7f1ff; }
+</style>
+</head>
+<body>
+<main class="container py-5">
+  <section aria-labelledby="drawer-title">
+    <h2 id="drawer-title" class="h4 mb-3">側邊抽屜</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-dark" data-drawer data-lbx-src="#tpl-menu"
+              data-lbx-title="主選單" aria-haspopup="dialog">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="me-1 align-text-top"><path d="M4 6h16M4 12h16M4 18h16"/></svg>開啟選單（右側）
+      </button>
+      <button type="button" class="btn btn-dark" data-drawer data-lbx-src="#tpl-menu"
+              data-lbx-title="主選單" data-lbx-placement="start" aria-haspopup="dialog">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="me-1 align-text-top"><path d="M4 6h16M4 12h16M4 18h16"/></svg>開啟選單（左側）
+      </button>
+      <!-- data-lbx-placement="start" 從左側滑出（預設 end = 右側） -->
+      <button type="button" class="btn btn-outline-dark" data-drawer data-lbx-src="#tpl-filter"
+              data-lbx-title="篩選條件" data-lbx-placement="start" aria-haspopup="dialog">篩選面板</button>
+    </div>
+
+    <template id="tpl-menu">
+      <nav aria-label="主選單">
+        <ul class="list-unstyled mb-0 drawer-menu">
+          <li><a href="https://www.example.com/" aria-current="page">首頁</a></li>
+          <li><a href="https://www.example.com/news">最新消息</a></li>
+          <li><a href="https://www.example.com/media">活動影音</a></li>
+          <li><a href="https://www.example.com/speakers">講者介紹</a></li>
+          <li><a href="https://www.example.com/traffic">交通資訊</a></li>
+          <li><a href="https://www.example.com/contact">聯絡我們</a></li>
+        </ul>
+      </nav>
+    </template>
+
+    <template id="tpl-filter">
+      <form method="dialog" class="vstack gap-4">
+        <fieldset>
+          <legend class="fs-6 fw-bold">活動類型</legend>
+          <div class="form-check"><input class="form-check-input" type="checkbox" id="f1" name="type" value="conference" checked autofocus><label class="form-check-label" for="f1">研討會</label></div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" id="f2" name="type" value="workshop"><label class="form-check-label" for="f2">工作坊</label></div>
+          <div class="form-check"><input class="form-check-input" type="checkbox" id="f3" name="type" value="online"><label class="form-check-label" for="f3">線上課程</label></div>
+        </fieldset>
+        <div>
+          <label for="f-month" class="form-label fw-bold">月份</label>
+          <select id="f-month" name="month" class="form-select">
+            <option value="">全部</option><option value="11">11 月</option><option value="12">12 月</option>
+          </select>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-outline-secondary flex-fill" value="reset" formnovalidate>清除</button>
+          <button type="submit" class="btn btn-primary flex-fill" value="apply">套用篩選</button>
+        </div>
+      </form>
+    </template>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+        integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
+<script>
+  const drawer = new DialogLightbox({ variant: 'drawer', selector: '[data-drawer]' });
+
+  // 點選選單連結後關閉抽屜
+  drawer.dialog.addEventListener('click', (e) => {
+    if (e.target.closest('.drawer-menu a')) drawer.close();
+  });
+
+  // 篩選：在關閉前讀取表單值
+  drawer.dialog.addEventListener('submit', (e) => {
+    if (e.submitter && e.submitter.value === 'apply') {
+      const data = new FormData(e.target);
+      console.log('篩選條件', data.getAll('type'), data.get('month'));
+    }
+  });
+</script>
+</body>
+</html>

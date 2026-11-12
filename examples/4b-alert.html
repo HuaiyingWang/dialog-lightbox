@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>範例四之二：SweetAlert 風格提示（DialogAlert）</title>
+<!-- Bootstrap 5.3.8 與 DialogLightbox v1.3.0：皆鎖定版本＋SRI 完整性驗證 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+      integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-alert.min.css"
+      integrity="sha384-ShBx3oOpbRj1En8kn6ILuonK7LxBP1/y+ncydGX2nqtmQMFJd36mKn6DgdHmsAsP" crossorigin="anonymous">
+</head>
+<body>
+<main class="container py-5">
+  <section aria-labelledby="demo-alert" class="mb-5">
+    <h2 id="demo-alert" class="h4 mb-3">範例四之二：SweetAlert 風格提示 <span class="badge text-bg-success align-middle fs-6">DialogAlert</span></h2>
+    <p class="text-secondary">用法仿照 SweetAlert2：<code>DialogAlert.fire({...})</code> 回傳 Promise。以 <code>role="alertdialog"</code> 呈現，所有文字以 <code>textContent</code> 輸出。</p>
+
+    <h3 class="h6 fw-bold mt-4">基本訊息與圖示</h3>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-primary" data-alert-demo="basic">基本訊息</button>
+      <button type="button" class="btn btn-outline-success" data-alert-demo="icon" data-icon="success">success</button>
+      <button type="button" class="btn btn-outline-danger" data-alert-demo="icon" data-icon="error">error</button>
+      <button type="button" class="btn btn-outline-warning" data-alert-demo="icon" data-icon="warning">warning</button>
+      <button type="button" class="btn btn-outline-info" data-alert-demo="icon" data-icon="info">info</button>
+      <button type="button" class="btn btn-outline-secondary" data-alert-demo="icon" data-icon="question">question</button>
+    </div>
+
+    <h3 class="h6 fw-bold mt-4">確認與選擇</h3>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-danger" data-alert-demo="delete">刪除確認 → 成功提示</button>
+      <button type="button" class="btn btn-outline-primary" data-alert-demo="save">三個按鈕（儲存／不儲存／取消）</button>
+    </div>
+
+    <h3 class="h6 fw-bold mt-4">輸入與非同步</h3>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-outline-primary" data-alert-demo="input">輸入框＋驗證</button>
+      <button type="button" class="btn btn-outline-primary" data-alert-demo="select">下拉選單</button>
+      <button type="button" class="btn btn-outline-primary" data-alert-demo="async">非同步送出（載入中）</button>
+    </div>
+
+    <h3 class="h6 fw-bold mt-4">自動關閉與通知</h3>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-outline-dark" data-alert-demo="timer">自動關閉（計時條）</button>
+      <button type="button" class="btn btn-outline-success" data-alert-demo="toast-success">Toast：成功</button>
+      <button type="button" class="btn btn-outline-danger" data-alert-demo="toast-error">Toast：錯誤</button>
+    </div>
+
+    <p class="small text-secondary mt-3 mb-0">回傳結果：<code id="alert-result" role="status">（尚未操作）</code></p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+        integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-alert.min.js"
+        integrity="sha384-8p00d4w2eKoxbA7NPj3Cx5OP/mbx4o4RtEkzdU2QVTKMQiD4/GYkA8fiaNsaa1aN" crossorigin="anonymous"></script>
+<script>
+  const showResult = (r) => { document.getElementById('alert-result').textContent = JSON.stringify(r); };
+
+  const ICON_DEMO = {
+    success: ['儲存成功', '您的資料已更新。'],
+    error: ['發生錯誤', '無法連線到伺服器，請稍後再試。'],
+    warning: ['請注意', '報名即將截止，請盡快完成。'],
+    info: ['小提醒', '會議資料將於活動前三天寄出。'],
+    question: ['需要協助嗎？', '可來電或寄信至服務信箱。']
+  };
+
+  const demos = {
+    // 1. 基本訊息：fire(標題, 內文, 圖示)
+    basic: () => DialogAlert.fire('報名成功！', '確認信已寄送到您的信箱。', 'success'),
+
+    // 2. 五種圖示
+    icon: (btn) => {
+      const [title, text] = ICON_DEMO[btn.dataset.icon];
+      return DialogAlert.fire({ icon: btn.dataset.icon, title, text });
+    },
+
+    // 3. 刪除確認 → 成功提示（破壞性操作：焦點預設在「取消」）
+    delete: async () => {
+      const r = await DialogAlert.fire({
+        icon: 'warning',
+        title: '確定要刪除嗎？',
+        text: '刪除後將無法復原。',
+        showCancelButton: true,
+        confirmButtonText: '是，刪除',
+        confirmButtonClass: 'btn btn-danger',
+        focusCancel: true
+      });
+      if (r.isConfirmed) {
+        await DialogAlert.fire({ icon: 'success', title: '已刪除', text: '檔案已移至垃圾桶。', timer: 2500, timerProgressBar: true });
+      }
+      return r;
+    },
+
+    // 4. 三個按鈕：確認／拒絕／取消
+    save: async () => {
+      const r = await DialogAlert.fire({
+        icon: 'question',
+        title: '要儲存變更嗎？',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: '儲存',
+        denyButtonText: '不儲存'
+      });
+      if (r.isConfirmed) DialogAlert.toast({ icon: 'success', title: '已儲存' });
+      else if (r.isDenied) DialogAlert.toast({ icon: 'info', title: '變更未儲存' });
+      return r;
+    },
+
+    // 5. 輸入框＋驗證（Enter 也可送出）
+    input: async () => {
+      const r = await DialogAlert.fire({
+        title: '訂閱電子報',
+        input: 'email',
+        inputLabel: '電子郵件',
+        inputPlaceholder: 'name@example.com',
+        inputAttributes: { autocomplete: 'email' },
+        showCancelButton: true,
+        confirmButtonText: '訂閱',
+        inputValidator: (v) => !v ? '請輸入電子郵件' : (!/^\S+@\S+\.\S+$/.test(v) ? '電子郵件格式不正確' : null)
+      });
+      if (r.isConfirmed) DialogAlert.fire({ icon: 'success', title: '訂閱完成', text: `已將 ${r.value} 加入訂閱名單。` });
+      return r;
+    },
+
+    // 6. 下拉選單
+    select: () => DialogAlert.fire({
+      title: '選擇場次',
+      input: 'select',
+      inputLabel: '場次',
+      inputPlaceholder: '請選擇',
+      inputOptions: { am: '11/21（五）上午場', pm: '11/21（五）下午場', ws: '11/22（六）工作坊' },
+      showCancelButton: true,
+      inputValidator: (v) => v ? null : '請選擇一個場次'
+    }),
+
+    // 7. 非同步送出：preConfirm 回傳 Promise，期間按鈕顯示載入中（約 30% 機率模擬失敗）
+    async: async () => {
+      const r = await DialogAlert.fire({
+        icon: 'question',
+        title: '送出報名表？',
+        text: '送出後將寄出確認信。',
+        showCancelButton: true,
+        confirmButtonText: '送出',
+        allowOutsideClick: false,
+        preConfirm: () => new Promise((resolve, reject) => {
+          setTimeout(() => Math.random() < 0.3
+            ? reject(new Error('伺服器忙碌，請再試一次。'))
+            : resolve({ id: 'REG-' + String(Date.now()).slice(-6) }), 1500);
+        })
+      });
+      if (r.isConfirmed) DialogAlert.fire({ icon: 'success', title: '報名完成', text: `報名編號：${r.value.id}` });
+      return r;
+    },
+
+    // 8. 自動關閉：滑鼠移入或鍵盤聚焦時暫停（WCAG 2.2.1）
+    timer: () => DialogAlert.fire({
+      icon: 'info',
+      title: '即將自動關閉',
+      text: '5 秒後自動關閉；滑鼠移入或用鍵盤操作時會暫停計時。',
+      timer: 5000,
+      timerProgressBar: true,
+      confirmButtonText: '好'
+    }),
+
+    // 9. Toast：不搶焦點，以 aria-live 播報
+    'toast-success': () => { DialogAlert.toast({ icon: 'success', title: '已加入購物車', text: '可至購物車查看。' }); },
+    'toast-error': () => { DialogAlert.toast({ icon: 'error', title: '上傳失敗', text: '檔案超過 10MB。', timer: 5000 }); }
+  };
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-alert-demo]');
+    if (!btn) return;
+    const result = await demos[btn.dataset.alertDemo](btn);
+    if (result) showResult(result);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/*!
+ * DialogAlert v1.3.0 — styles（需搭配 dialog-lightbox.css）
+ */
+:root{
+  --lbx-alert-success: #198754;
+  --lbx-alert-error: #dc3545;
+  --lbx-alert-warning: #b35c00;
+  --lbx-alert-info: #0a7ea4;
+  --lbx-alert-question: #5a6772;
+}
+
+/* ---------- 提示視窗 ---------- */
+.lbx--alert{ background: rgba(15, 18, 25, .45); }
+.lbx--alert .lbx__inner{
+  --lbx-modal-width: 30rem;
+  position: relative;
+  grid-template-rows: minmax(0, 1fr);
+  border-radius: 1rem;
+  overflow: hidden;
+  animation: lbx-alert-pop .3s cubic-bezier(.2, .9, .3, 1.2) both;
+}
+.lbx--alert[data-size="sm"] .lbx__inner{ --lbx-modal-width: 22rem; }
+.lbx--alert[data-size="lg"] .lbx__inner{ --lbx-modal-width: 40rem; }
+.lbx--alert .lbx__bar{ display: none; }
+.lbx--alert .lbx__stage{ padding: 0; }
+/* 手機版仍置中（不變成底部抽屜） */
+@media (max-width: 575.98px){
+  .lbx--modal.lbx--alert{ place-items: center; padding: 1rem; }
+  .lbx--alert .lbx__inner{ width: 100%; border-radius: 1rem; }
+}
+@keyframes lbx-alert-pop{
+  0%{ opacity: 0; transform: scale(.7); }
+  60%{ opacity: 1; transform: scale(1.03); }
+  100%{ transform: scale(1); }
+}
+
+.lbx-alert{
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 2rem 1.75rem 1.75rem;
+  text-align: center;
+}
+.lbx-alert__title{ margin: 0 0 .5rem; font-size: 1.5rem; font-weight: 700; line-height: 1.35; color: #212529; }
+.lbx-alert__text{ margin: 0; color: #495057; line-height: 1.7; }
+.lbx-alert__html{ width: 100%; color: #495057; text-align: left; }
+.lbx-alert__field{ width: 100%; margin-top: 1.25rem; text-align: left; }
+.lbx-alert__error{
+  width: 100%; margin-top: .75rem; padding: .5rem .75rem;
+  border-radius: .375rem;
+  background: #f8d7da; color: #842029;
+  font-size: .875rem; text-align: left;
+}
+.lbx-alert__error::before{ content: "⚠ "; }
+.lbx-alert__actions{
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .625rem;
+  margin-top: 1.5rem;
+}
+.lbx-alert__btn{ min-width: 6rem; min-height: 2.75rem; transition: transform .1s ease, background-color .15s ease, box-shadow .15s ease; }
+.lbx-alert__btn:active:not(:disabled){ transform: scale(.96); }
+.lbx-alert__btn[aria-busy="true"]::before{
+  content: ""; display: inline-block; width: 1em; height: 1em; margin-right: .5em; vertical-align: -.125em;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: lbx-spin .7s linear infinite;
+}
+.lbx-alert__close{
+  position: absolute; top: .5rem; right: .5rem;
+  display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem; padding: 0;
+  color: #6c757d; background: transparent; border: 0; border-radius: 50%;
+  cursor: pointer; transition: background-color .15s ease, color .15s ease, transform .1s ease;
+}
+.lbx-alert__close:hover{ color: #212529; background: #f1f3f5; }
+.lbx-alert__close:active{ transform: scale(.92); }
+.lbx-alert__close:focus-visible{ outline: 3px solid var(--lbx-focus-light, #0b5ed7); outline-offset: 2px; }
+
+/* 計時條 */
+.lbx-alert__timer{
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: .3rem;
+  background: rgba(13, 110, 253, .55);
+  transform-origin: left;
+  animation: lbx-alert-timer linear forwards;
+}
+.is-paused .lbx-alert__timer{ animation-play-state: paused; }
+@keyframes lbx-alert-timer{ from{ transform: scaleX(1); } to{ transform: scaleX(0); } }
+
+/* ---------- 圖示 ---------- */
+.lbx-alert__icon{ width: 5rem; height: 5rem; margin-bottom: 1rem; }
+.lbx-alert__icon svg{ width: 100%; height: 100%; display: block; overflow: visible; }
+.lbx-alert__icon--success{ color: var(--lbx-alert-success); }
+.lbx-alert__icon--error{ color: var(--lbx-alert-error); }
+.lbx-alert__icon--warning{ color: var(--lbx-alert-warning); }
+.lbx-alert__icon--info{ color: var(--lbx-alert-info); }
+.lbx-alert__icon--question{ color: var(--lbx-alert-question); }
+.lbx-alert__icon .ring{ opacity: .3; stroke-dasharray: 1; stroke-dashoffset: 1; animation: lbx-alert-draw .45s ease-out forwards; }
+.lbx-alert__icon .mark{ stroke-dasharray: 1; stroke-dashoffset: 1; animation: lbx-alert-draw .35s .35s ease-out forwards; }
+.lbx-alert__icon .mark--2{ animation-delay: .5s; }
+.lbx-alert__icon .dot{ fill: currentColor; stroke: none; opacity: 0; animation: lbx-alert-fade .2s .55s forwards; }
+.lbx-alert__icon--success .ring,
+.lbx-alert__icon--error .ring{ opacity: 1; }
+.lbx-alert__icon--error svg{ animation: lbx-alert-shake .4s .7s ease-in-out; }
+.lbx-alert__icon--warning svg{ animation: lbx-alert-pulse .6s .6s ease-in-out; }
+@keyframes lbx-alert-draw{ to{ stroke-dashoffset: 0; } }
+@keyframes lbx-alert-fade{ to{ opacity: 1; } }
+@keyframes lbx-alert-shake{ 0%, 100%{ translate: 0; } 25%{ translate: -4px; } 75%{ translate: 4px; } }
+@keyframes lbx-alert-pulse{ 0%, 100%{ scale: 1; } 50%{ scale: 1.08; } }
+
+/* ---------- Toast ---------- */
+.lbx-toasts{
+  position: fixed; inset: 1rem 1rem auto auto;
+  z-index: 1090;
+  display: flex; flex-direction: column; gap: .625rem;
+  width: min(22rem, calc(100vw - 2rem));
+  margin: 0; padding: 0; border: 0;
+  background: transparent; color: inherit;
+  overflow: visible;
+  pointer-events: none;
+}
+.lbx-toasts[popover]:not(:popover-open){ display: none; }
+.lbx-toast{
+  position: relative;
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .875rem 2.75rem .875rem .875rem;
+  overflow: hidden;
+  background: #fff; color: #212529;
+  border-radius: .75rem;
+  box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.18);
+  pointer-events: auto;
+  animation: lbx-toast-in .3s ease both;
+}
+.lbx-toast.is-leaving{ animation: lbx-toast-out .2s ease forwards; }
+.lbx-toast .lbx-alert__icon{ flex: 0 0 auto; width: 2rem; height: 2rem; margin: 0; }
+.lbx-toast__body{ min-width: 0; }
+.lbx-toast__title{ margin: .25rem 0 0; font-weight: 700; line-height: 1.4; }
+.lbx-toast__text{ margin: .25rem 0 0; font-size: .875rem; color: #495057; }
+.lbx-toast__close{
+  position: absolute; top: .375rem; right: .375rem;
+  display: grid; place-items: center;
+  width: 2rem; height: 2rem; padding: 0;
+  color: #6c757d; background: transparent; border: 0; border-radius: 50%;
+  cursor: pointer; transition: background-color .15s ease, transform .1s ease;
+}
+.lbx-toast__close:hover{ background: #f1f3f5; color: #212529; }
+.lbx-toast__close:active{ transform: scale(.9); }
+.lbx-toast__close:focus-visible{ outline: 3px solid var(--lbx-focus-light, #0b5ed7); outline-offset: 1px; }
+@keyframes lbx-toast-in{ from{ opacity: 0; transform: translateX(1.5rem); } }
+@keyframes lbx-toast-out{ to{ opacity: 0; transform: translateX(1.5rem); } }
+@media (max-width: 575.98px){
+  .lbx-toasts{ inset: auto .75rem .75rem .75rem; width: auto; }
+}
+
+/* ---------- 無障礙偏好 ---------- */
+@media (forced-colors: active){
+  .lbx-toast{ border: 1px solid CanvasText; }
+  .lbx-alert__error{ border: 1px solid CanvasText; }
+}
+@media (prefers-reduced-motion: reduce){
+  .lbx--alert .lbx__inner, .lbx-toast, .lbx-toast.is-leaving{ animation: none; }
+  .lbx-alert__icon *, .lbx-alert__icon svg{ animation: none !important; stroke-dashoffset: 0; opacity: 1; }
+  .lbx-alert__icon .ring{ opacity: .3; }
+  .lbx-alert__icon--success .ring, .lbx-alert__icon--error .ring{ opacity: 1; }
+}

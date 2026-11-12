@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>範例二：Inline 內容與 YouTube</title>
+<!-- Bootstrap 5.3.8 與 DialogLightbox v1.3.0：皆鎖定版本＋SRI 完整性驗證 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+      integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
+</head>
+<body>
+<main class="container py-5">
+  <section aria-labelledby="inline-title">
+    <h2 id="inline-title" class="h4 mb-3">Inline 內容</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-primary" data-lbx data-lbx-type="inline"
+              data-lbx-src="#tpl-terms" data-lbx-title="報名須知" aria-haspopup="dialog">開啟報名須知</button>
+
+      <!-- YouTube：網域必須在 iframeHosts 白名單內（示範影片：Blender 基金會《Big Buck Bunny》） -->
+      <a class="btn btn-outline-primary" href="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ"
+         data-lbx data-lbx-type="iframe" data-lbx-title="Big Buck Bunny（Blender 基金會）" aria-haspopup="dialog">觀看 YouTube 影片</a>
+    </div>
+
+    <!-- Inline 內容一律放在 <template>，以 cloneNode 複製，不經過 innerHTML -->
+    <template id="tpl-terms">
+      <h2 class="h4">報名須知</h2>
+      <ol>
+        <li>報名截止日：2026 年 12 月 31 日</li>
+        <li>名額有限，額滿為止</li>
+        <li>如需無障礙協助，請於報名表備註</li>
+      </ol>
+    </template>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+        integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
+<script>
+  const lightbox = new DialogLightbox({
+    iframeHosts: ['www.youtube-nocookie.com', 'player.vimeo.com']
+  });
+</script>
+</body>
+</html>

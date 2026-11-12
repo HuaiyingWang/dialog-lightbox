@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>範例四：一般 Modal</title>
+<!-- Bootstrap 5.3.8 與 DialogLightbox v1.3.0：皆鎖定版本＋SRI 完整性驗證 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+      integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
+</head>
+<body>
+<main class="container py-5">
+  <section aria-labelledby="modal-title">
+    <h2 id="modal-title" class="h4 mb-3">一般 Modal</h2>
+    <div class="d-flex flex-wrap gap-2">
+      <button type="button" class="btn btn-primary" data-modal data-lbx-src="#tpl-subscribe"
+              data-lbx-title="訂閱電子報" aria-haspopup="dialog">表單 Modal</button>
+      <button type="button" class="btn btn-outline-danger" data-modal data-lbx-src="#tpl-confirm"
+              data-lbx-title="確定要刪除嗎？" data-lbx-size="sm" aria-haspopup="dialog">確認視窗（sm）</button>
+      <button type="button" class="btn btn-outline-primary" data-modal data-lbx-src="#tpl-speaker"
+              data-lbx-title="講者介紹：王小明 博士" data-lbx-size="lg" aria-haspopup="dialog">講者快速預覽（lg）</button>
+    </div>
+    <p class="small text-secondary mt-2 mb-0" id="modal-result" role="status"></p>
+
+    <!-- 表單：method="dialog" 送出後自動關閉，returnValue = 按鈕 value -->
+    <template id="tpl-subscribe">
+      <form method="dialog" class="vstack gap-3">
+        <p class="mb-0">每月一封，提供最新活動與報名資訊。</p>
+        <div>
+          <label for="sub-email" class="form-label">電子郵件 <span class="text-danger" aria-hidden="true">*</span><span class="visually-hidden">（必填）</span></label>
+          <input type="email" id="sub-email" name="email" class="form-control" required autocomplete="email" autofocus aria-describedby="sub-email-hint">
+          <div id="sub-email-hint" class="form-text">例如 name@example.com</div>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="sub-agree" required>
+          <label class="form-check-label" for="sub-agree">我同意隱私權政策</label>
+        </div>
+        <div class="d-flex justify-content-end gap-2 pt-2">
+          <button type="submit" class="btn btn-outline-secondary" value="cancel" formnovalidate>取消</button>
+          <button type="submit" class="btn btn-primary" value="subscribe">訂閱</button>
+        </div>
+      </form>
+    </template>
+
+    <!-- 確認視窗：[data-lbx-close] 按鈕會關閉並回傳 value；autofocus 放在較安全的「取消」 -->
+    <template id="tpl-confirm">
+      <p>刪除後將無法復原，確定要刪除「2026 年會議紀錄」嗎？</p>
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" data-lbx-close value="cancel" autofocus>取消</button>
+        <button type="button" class="btn btn-danger" data-lbx-close value="delete">刪除</button>
+      </div>
+    </template>
+
+    <template id="tpl-speaker">
+      <div class="row g-4 align-items-start">
+        <div class="col-sm-4">
+          <img src="https://placehold.co/240x240/dbe4f3/2f4b7c/png?text=Photo" alt="" class="img-fluid rounded-circle" width="240" height="240">
+        </div>
+        <div class="col-sm-8">
+          <p class="text-secondary mb-2">國立○○大學 醫學院 教授</p>
+          <p>研究專長為心血管影像與介入治療，曾任亞洲心血管學會理事，發表期刊論文逾百篇。</p>
+          <h3 class="h6 fw-bold mt-3">演講場次</h3>
+          <ul class="mb-0">
+            <li>11/21（五）10:00　主題演講：心臟影像的新趨勢</li>
+            <li>11/22（六）14:30　工作坊：超音波實作</li>
+          </ul>
+        </div>
+      </div>
+    </template>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+        integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
+<script>
+  const modal = new DialogLightbox({ variant: 'modal', selector: '[data-modal]' });
+
+  // 依使用者按下的按鈕處理後續動作
+  modal.dialog.addEventListener('lbx:close', (e) => {
+    const value = e.detail.returnValue; // 'subscribe' | 'cancel' | 'delete' | ''
+    document.getElementById('modal-result').textContent = value ? '使用者選擇：' + value : '';
+    // if (value === 'delete') { ...呼叫刪除 API... }
+  });
+</script>
+</body>
+</html>

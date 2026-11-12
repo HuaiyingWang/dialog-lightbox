@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>範例一：圖片相簿＋縮放＋縮圖列</title>
+<!-- 示範圖片來源：Lorem Picsum（https://picsum.photos），正式使用請換成自家圖片網址與對應替代文字 -->
+<!-- Bootstrap 5.3.8 與 DialogLightbox v1.3.0：皆鎖定版本＋SRI 完整性驗證 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.css"
+      integrity="sha384-Ox3COodi7394+8HLW0PSY2Mb4lvUQDel1KVa0yPu+ZPQiwMLEGLMbow9qiInVfAZ" crossorigin="anonymous">
+<style>
+  .gallery{ display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); margin: 0; padding: 0; list-style: none; }
+  .gallery figure{ margin: 0; }
+  .gallery figcaption{ margin-top: .5rem; font-size: .875rem; color: #495057; }
+  .thumb{ display: block; overflow: hidden; border-radius: .5rem; box-shadow: 0 1px 2px rgba(0,0,0,.08); transition: box-shadow .2s ease, transform .1s ease; }
+  .thumb img{ display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .35s ease; }
+  .thumb:hover{ box-shadow: 0 .5rem 1.25rem rgba(0,0,0,.18); }
+  .thumb:hover img{ transform: scale(1.04); }
+  .thumb:active{ transform: scale(.98); }
+  .thumb:focus-visible{ outline: 3px solid #0b5ed7; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce){ .thumb, .thumb img{ transition: none; } }
+</style>
+</head>
+<body>
+<main class="container py-5">
+  <section aria-labelledby="gallery-title">
+    <h2 id="gallery-title" class="h4 mb-3">活動花絮</h2>
+    <ul class="gallery">
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1015/1600/1000" data-lbx data-lbx-group="travel" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1015/400/300" alt="從懸崖上俯瞰峽灣，深藍色的水道蜿蜒在岩壁山脈之間" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>峽灣景色</figcaption>
+      </figure></li>
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1018/1600/1000" data-lbx data-lbx-group="travel" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1018/400/300" alt="綠色草坡與陡峭山崖，一條小路蜿蜒穿過山谷" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>山谷間的小路</figcaption>
+      </figure></li>
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1036/1600/1000" data-lbx data-lbx-group="travel" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1036/400/300" alt="雪地上的黃色帳篷與石牆，遠方是積雪的山峰" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>雪山露營</figcaption>
+      </figure></li>
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1043/1600/1000" data-lbx data-lbx-group="travel" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1043/400/300" alt="河岸旁高聳的松樹林，後方是花崗岩峭壁" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>森林與峭壁</figcaption>
+      </figure></li>
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1016/1600/1000" data-lbx data-lbx-group="travel" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1016/400/300" alt="夕陽照耀下的紅色岩石峽谷" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>紅岩峽谷</figcaption>
+      </figure></li>
+      <li><figure>
+        <a class="thumb" href="https://picsum.photos/id/1035/1600/1000" data-lbx data-lbx-group="travel"
+           data-lbx-caption="瀑布與彩虹（data-lbx-caption 可覆寫燈箱說明文字）" aria-haspopup="dialog">
+          <img src="https://picsum.photos/id/1035/400/300" alt="瀑布前出現一道彩虹，一個人張開雙臂站在水邊" width="400" height="300" loading="lazy">
+        </a>
+        <figcaption>瀑布與彩虹</figcaption>
+      </figure></li>
+    </ul>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/HuaiyingWang/dialog-lightbox@v1.3.0/dist/dialog-lightbox.min.js"
+        integrity="sha384-rFuCkHYyurmf9J3he3OuS8wLEkBHOk0VHQjkX5hC63oqueWDtCHHcCOpSGOU80Wy" crossorigin="anonymous"></script>
+<script>
+  const lightbox = new DialogLightbox({
+    thumbnails: true,          // 縮圖列
+    zoom: true,                // 圖片縮放（按鈕／雙擊／滾輪／雙指）
+    maxZoom: 4,
+    mediaProtocols: ['https:']   // 只允許 https 網址
+  });
+</script>
+</body>
+</html>
